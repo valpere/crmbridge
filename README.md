@@ -9,10 +9,6 @@ and **Nova Poshta** to a **SalesDrive** CRM:
 - a Nova Poshta parcel status moves the deal along the funnel and messages the
   customer.
 
-> Demo project. SalesDrive and Nova Poshta are **simulated** (`cmd/fakes`),
-> shaped after their published API descriptions. It has never talked to a live
-> SalesDrive account, Binotel or Nova Poshta. See [Honest limits](#honest-limits).
-
 ## The actual hard problem
 
 Pushing an order into a CRM is one HTTP call. Keeping the CRM *right* is not:
@@ -103,29 +99,6 @@ lead window, polling, backoff).
 Four guards were broken on purpose (no lookup before re-create, no call-event
 dedupe, no forward-only rule, no lead window); two survived at first, so the
 tests were tightened until each one made a test fail.
-
-## Honest limits
-
-- **Never run against a live account.** The SalesDrive client and stand-in
-  follow the OpenAPI description at `api.salesdrive.me` (read on 2026-09-21).
-  Assumptions: that the order list can be filtered by `filter[externalId]`
-  (the docs say "any field"), the error texts and status codes, and the id of
-  each funnel status (they are per account; put yours in `np_status_map`).
-- **Binotel:** its developer site was unreachable while this was written. The
-  event names (`receivedTheCall`, `apiCallCompleted`) and the `callDetails`
-  fields are from public integrations and may differ from your account.
-- **Nova Poshta:** the tracking request and the status table follow the public
-  documentation and a third-party write-up; the codes 102–108 are treated as
-  "refusal / return".
-- **Not implemented:** KeyCRM (only SalesDrive); one-click TTN creation
-  (SalesDrive's own Nova Poshta integration does it; this service tracks the
-  parcel); SMS/Viber (Telegram only); call recordings; a real-time pop-up in the
-  browser (the card is sent as a message).
-- SalesDrive itself can track Nova Poshta parcels; what this adds is your own
-  status mapping, messages and manager alerts in one place. Use whichever fits.
-- The SalesDrive webhook has no signature in its spec, so it is protected by a
-  secret in the URL.
-- SQLite with a single connection: one instance only.
 
 ## Stack
 

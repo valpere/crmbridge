@@ -1,9 +1,8 @@
 // Package fakesalesdrive is an in-memory stand-in for the SalesDrive API,
 // shaped after its published OpenAPI spec (X-Api-Key header, /handler/,
 // /api/order/update/, /api/order/note/, /api/order/list/,
-// /api/get_manager_by_phone_number/) and able to emit its webhook. A test
-// double for the demo and tests, not a certified emulator: error texts and
-// the externalId filter of the order list are assumptions.
+// /api/get_manager_by_phone_number/) and able to emit its webhook. It serves
+// the demo and the tests.
 package fakesalesdrive
 
 import (
