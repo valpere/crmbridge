@@ -1,0 +1,38 @@
+# crmbridge demo configuration: talks to the local stand-ins (cmd/fakes).
+# For a real account: salesdrive.base_url https://<account>.salesdrive.me,
+# novaposhta.base_url https://api.novaposhta.ua, and keys from the environment.
+listen: ":8788"
+db: data/crmbridge.db
+api_token: ""                # bearer for /site/orders and /api/*; empty = open (demo only)
+webhook_secret: "demo-secret" # ?token= on /webhooks/binotel and /webhooks/salesdrive
+
+salesdrive:
+  base_url: "http://localhost:9101"
+  api_key: "demo-key"          # real: "${SALESDRIVE_API_KEY}"
+  site_name: "Демо-магазин"
+
+novaposhta:
+  base_url: "http://localhost:9102"
+  api_key: ""                  # getStatusDocuments works without a key; real: "${NP_API_KEY}"
+
+# Nova Poshta status code -> SalesDrive status id (ids are per account: see /api/statuses/)
+np_status_map: {7: 21, 8: 21, 9: 22, 102: 23}
+
+# Binotel internal number -> where the caller card goes; "telegram:<chat id>" or anything (logged)
+managers: {"101": "manager-oleksii", "102": "manager-maria"}
+default_manager: "manager-on-duty"
+telegram_token: ""             # optional: real Telegram delivery for targets "telegram:<chat id>"
+
+binotel:
+  missed_dispositions: [NOANSWER, BUSY, CANCEL, CONGESTION, CHANUNAVAIL]
+  lead_dedupe: 30m             # more missed calls from one number inside this window become notes
+
+tracking:
+  poll_every: 3s               # real: 10m
+  max_age: 336h
+
+worker:
+  tick: 1s
+  max_attempts: 8
+  backoff_base: 1s
+  backoff_max: 5m
