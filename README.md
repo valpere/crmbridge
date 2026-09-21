@@ -100,6 +100,22 @@ Four guards were broken on purpose (no lookup before re-create, no call-event
 dedupe, no forward-only rule, no lead window); two survived at first, so the
 tests were tightened until each one made a test fail.
 
+## Connecting it to your accounts
+
+- **SalesDrive:** set `salesdrive.base_url` (`https://<account>.salesdrive.me`)
+  and `api_key`; add `https://<host>/webhooks/salesdrive?token=<secret>` under
+  Webhooks. Put your funnel's status ids in `np_status_map`.
+- **Binotel:** send call events to `https://<host>/webhooks/binotel?token=<secret>`;
+  map internal numbers to managers in `managers`.
+- **Nova Poshta:** with `novaposhta.api_key` set, tracking runs against the
+  live API in batches of 100; `tracking.poll_every` sets the pace.
+- **Your shop or bot:** `POST /site/orders` with the order id as the
+  idempotency key.
+- **Another CRM (for example KeyCRM):** implement the five methods of
+  `service.CRM` and pass it to `service.New`.
+- **Messages:** `telegram_token` sends manager cards and customer statuses to
+  Telegram.
+
 ## Stack
 
 Go (net/http, log/slog, database/sql), SQLite (`modernc.org/sqlite`, pure Go),
